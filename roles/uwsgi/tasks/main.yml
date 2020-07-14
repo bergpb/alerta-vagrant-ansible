@@ -1,0 +1,30 @@
+---
+- name: 'Copia arquivo wsgi.py'
+  copy:
+    src: 'files/wsgi.py'
+    dest: '/var/www/'
+  notify:
+    - restart uwsgi
+  become: yes
+
+- name: 'Copia arquivo uwsgi.ini'
+  copy:
+    src: 'files/uwsgi.ini'
+    dest: '/etc/'
+  notify:
+    - restart uwsgi
+  become: yes
+
+- name: 'Cria configuração do systemd para o uwsgi'
+  copy:
+    src: 'files/uwsgi.service'
+    dest: '/etc/systemd/system/'
+  notify:
+    - restart uwsgi
+  become: yes
+
+- name: 'Reinicia o serviço do uwsgi'
+  service:
+    name: uwsgi
+    state: restarted
+  become: yes

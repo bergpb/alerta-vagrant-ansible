@@ -1,0 +1,26 @@
+---
+- name: 'Instala a chave do repositório'
+  apt_key:
+    id: 4B7C549A058F8B6B
+    keyserver: hkp://keyserver.ubuntu.com:80
+    state: present
+  become: yes
+
+- name: 'Adiciona a url do repositório'
+  apt_repository:
+    repo: deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse
+    state: present
+  become: yes
+
+- name: 'Instala o MongoDB'
+  apt:
+    update_cache: yes
+    name: ['mongodb-org']
+    state: latest
+  become: yes
+
+- name: 'Reinicia o serviço do mongod'
+  service:
+    name: mongod
+    state: restarted
+  become: yes

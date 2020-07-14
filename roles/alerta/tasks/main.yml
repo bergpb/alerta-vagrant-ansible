@@ -1,0 +1,47 @@
+---
+- name: 'Copia arquivo de requirements para o servidor'
+  copy:
+    src: 'files/requirements.txt'
+    dest: '/opt/alerta/'
+  become: yes
+
+- name: 'Cria virtualenv e instala requirements'
+  pip:
+    requirements: '/opt/alerta/requirements.txt'
+    virtualenv: /opt/alerta/
+    virtualenv_command: /usr/bin/python3 -m venv
+  become: yes
+
+- name: 'Baixa aplicação web do alerta-webui'
+  get_url:
+    url: 'https://github.com/alerta/alerta-webui/releases/latest/download/alerta-webui.tar.gz'
+    dest: '/tmp/alerta-webui.tar.gz'
+
+- name: 'Descompacta o alerta-webui'
+  unarchive:
+    src: '/tmp/alerta-webui.tar.gz'
+    dest: /tmp/
+    remote_src: yes
+  become: yes
+
+- name: 'Copia arquivos do alerta-webui para /var/www/html'
+  copy:
+    src: /tmp/dist/
+    dest: /var/www/html/
+    remote_src: yes
+  become: yes
+
+- name: 'Copia o arquivo config.json para /var/www/html'
+  copy:
+    src: 'files/config.json'
+    dest: '/var/www/html/'
+  become: yes
+
+- name: 'Copia arquivo de configuração padrão'
+  copy:
+    src: 'files/alertad.conf'
+    dest: '/etc/'
+  notify:
+    - restart uwsgi
+  become: yes
+

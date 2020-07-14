@@ -1,0 +1,20 @@
+---
+- name: 'Instala o Nginx'
+  apt:
+    name: ['nginx']
+    state: latest
+  become: yes
+
+- name: 'Copia arquivo de configuração do nginx'
+  copy:
+    src: 'files/default'
+    dest: '/etc/nginx/sites-enabled/'
+  notify:
+    - restart nginx
+  become: yes
+
+- name: 'Reinicia o serviço do nginx'
+  service:
+    name: nginx
+    state: restarted
+  become: yes
