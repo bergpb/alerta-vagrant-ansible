@@ -1,6 +1,6 @@
 ### Alerta
 
-##### Deploy da aplicação alerta utilizando Vagrant e Ansible
+##### Deploy da aplicação Alerta utilizando Vagrant e Ansible
 
 Tenha o `vagrant` e `ansible` instalados na máquina.  
 
